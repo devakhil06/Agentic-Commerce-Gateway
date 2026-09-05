@@ -1,0 +1,13 @@
+.git
+.env*
+.local
+.venv
+.pub-cache
+**/__pycache__
+**/.dart_tool
+**/.flutter-plugins*
+**/build
+*.db*
+*.docx
+srs-extracted.txt
+**/*.log

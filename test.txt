@@ -1,0 +1,31 @@
+Product ID,Category,Product Name,Model,Price (INR),No Cost EMI (Months)
+BJ-1001,Smartphones,Samsung Galaxy S24 Ultra,SM-S928B,129999,18
+BJ-1002,Smartphones,Apple iPhone 15 Pro,A3102,134900,24
+BJ-1003,Smartphones,OnePlus 12,CPH2573,64999,12
+BJ-1004,Smartphones,Xiaomi 14 Pro,24030PN60G,79999,12
+BJ-1005,Smartphones,Vivo X100 Pro,V2324,89999,18
+BJ-1006,Laptops,MacBook Air M3,MRXN3HN/A,114900,24
+BJ-1007,Laptops,HP Pavilion x360,14-ek1009TU,72990,12
+BJ-1008,Laptops,Dell XPS 13,9320-R2705W,149990,24
+BJ-1009,Laptops,Lenovo IdeaPad Slim 5,83BF000XIN,62990,9
+BJ-1010,Laptops,ASUS ROG Strix G16,G614JV-N4041WS,124990,18
+BJ-1011,Televisions,Sony Bravia 55 Inch 4K OLED,XR-55A80L,164990,24
+BJ-1012,Televisions,LG 65 Inch QNED 4K TV,65QNED80SRA,104990,18
+BJ-1013,Televisions,Samsung 55 Inch Neo QLED,55QN85C,119900,18
+BJ-1014,Televisions,TCL 65 Inch Mini LED TV,65C755,89990,12
+BJ-1015,Televisions,Xiaomi 55 Inch X Pro 4K,L55M8-A2IN,39999,9
+BJ-1016,Refrigerators,Samsung 653L Side-by-Side,RS76CG8003S9,84990,18
+BJ-1017,Refrigerators,LG 343L Double Door,GL-T382VESX,42990,12
+BJ-1018,Refrigerators,Whirlpool 265L Triple Door,FP 283D,28990,9
+BJ-1019,Refrigerators,Haier 570L Side-by-Side,HRF-622SS,59990,12
+BJ-1020,Refrigerators,Godrej 236L Direct Cool,RD EDGETRIO 236,21990,6
+BJ-1021,Washing Machines,Bosch 8 kg Front Load,WAJ2826EIN,38990,12
+BJ-1022,Washing Machines,IFB 7.5 kg Front Load,Executive Plus VX,34990,9
+BJ-1023,Washing Machines,Samsung 8 kg AI Top Load,WA80BG4546BR,24990,6
+BJ-1024,Washing Machines,LG 9 kg Fully Automatic,FHM1409BDW,41990,12
+BJ-1025,Air Conditioners,Daikin 1.5 Ton 5 Star Inverter AC,FTKM50U,45990,12
+BJ-1026,Air Conditioners,Voltas 1.5 Ton 3 Star Inverter AC,183V Vectra,33990,9
+BJ-1027,Air Conditioners,Blue Star 1.3 Ton 5 Star AC,IC515YNU,42990,12
+BJ-1028,Kitchen Appliances,Philips Digital Air Fryer,HD9252/90,8999,6
+BJ-1029,Kitchen Appliances,Bajaj GX1 500W Mixer Grinder,GX1-500W,2499,3
+BJ-1030,Kitchen Appliances,IFB 30L Convection Microwave,30FRC2,16490,6

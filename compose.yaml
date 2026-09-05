@@ -1,0 +1,59 @@
+services:
+  database:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: acg
+      POSTGRES_USER: acg
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U acg -d acg"]
+      interval: 5s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+  api:
+    build: .
+    image: acg-gateway:local
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql+psycopg://acg:${POSTGRES_PASSWORD}@database:5432/acg
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      retries: 10
+  worker:
+    image: acg-gateway:local
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql+psycopg://acg:${POSTGRES_PASSWORD}@database:5432/acg
+      REDIS_URL: redis://redis:6379/0
+    command: ["celery", "-A", "backend.app.jobs.celery", "worker", "--loglevel=INFO"]
+    depends_on:
+      api:
+        condition: service_healthy
+  scheduler:
+    image: acg-gateway:local
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql+psycopg://acg:${POSTGRES_PASSWORD}@database:5432/acg
+      REDIS_URL: redis://redis:6379/0
+    command: ["celery", "-A", "backend.app.jobs.celery", "beat", "--loglevel=INFO", "--schedule=/tmp/acg-beat"]
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  postgres_data:
+  redis_data:
