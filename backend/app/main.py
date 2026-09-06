@@ -37,7 +37,10 @@ from .seed import seed_catalog
 async def lifespan(app):
     local_secret("secret_key")
     local_secret("encryption_key")
-    if get_settings().environment == "development":
+    # Vercel's temporary SQLite fallback has no migration process, so create
+    # its tables on cold start. Durable PostgreSQL deployments should run the
+    # Alembic migrations as part of their release process.
+    if get_settings().environment == "development" or engine.dialect.name == "sqlite":
         initialize_database(engine)
     yield
 
@@ -589,3 +592,4 @@ async def events(socket: WebSocket):
 web_build = Path(__file__).resolve().parents[2] / "frontend" / "build" / "web"
 if web_build.exists():
     app.mount("/", StaticFiles(directory=web_build, html=True), name="web")
+
