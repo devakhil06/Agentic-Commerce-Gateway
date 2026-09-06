@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 import secrets
 from pathlib import Path
 
@@ -22,7 +23,8 @@ def local_secret(name):
         return value
     if settings.environment != "development":
         raise RuntimeError(f"{name.upper()} must be configured outside development")
-    path = Path(".local") / name
+    runtime_dir = os.getenv("ACG_RUNTIME_DIR") or ("/tmp/acg" if os.getenv("VERCEL") else ".local")
+    path = Path(runtime_dir) / name
     path.parent.mkdir(exist_ok=True)
     if not path.exists():
         value = Fernet.generate_key().decode() if name == "encryption_key" else secrets.token_urlsafe(48)
