@@ -142,6 +142,33 @@ Domain records use a workspace/kind-scoped JSON aggregate store for the MVP. Uni
 
 AI incremental revenue = final captured revenue − baseline cart value = upsell + cross-sell − discount. Growth attribution labels are accepted only when they match a server-issued offer. All conversion estimates are heuristics, not claims about a trained model's accuracy.
 
+## Deploy publicly on Vercel
+
+The repository is Vercel-ready. Every push to `main` deploys the FastAPI serverless app together with the Flutter web console. The current public demo is **https://acg-blue.vercel.app**.
+
+The Vercel deployment is suitable for a shared demo while it uses its default `/tmp` SQLite database. `/tmp` is ephemeral, so data can be lost when a serverless instance is recycled. For a real merchant workspace, add a managed PostgreSQL database before enabling production mode.
+
+In Vercel, open **Project Settings → Environment Variables**, add the values below for **Production** (and Preview if you want preview deployments), then redeploy:
+
+```dotenv
+ENVIRONMENT=production
+DATABASE_URL=postgresql+psycopg://...
+SECRET_KEY=<long-random-value>
+ENCRYPTION_KEY=<Fernet key>
+NVIDIA_API_KEY=<NVIDIA NIM key>
+NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
+NVIDIA_MODEL=nvidia/nemotron-3-ultra-550b-a55b
+NVIDIA_EMBEDDING_MODEL=nvidia/nv-embedqa-e5-v5
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=<Razorpay test secret>
+RAZORPAY_WEBHOOK_SECRET=<webhook secret, 16+ chars>
+ALLOWED_ORIGINS=https://acg-blue.vercel.app
+```
+
+Use Vercel Marketplace Neon, Supabase, or another managed PostgreSQL provider. The production profile uses PostgreSQL and pgvector; Redis/Celery jobs still need a managed Redis and a worker host/container. Never put these secrets in GitHub or in the Flutter bundle.
+
+For Razorpay Test Mode, configure the webhook URL shown in **Integrations** as `https://acg-blue.vercel.app/api/v1/webhooks/razorpay/<merchant-id>`, subscribe to `payment.captured` and `payment.failed`, and use the same webhook secret in Vercel. The public site must be deployed before Razorpay can deliver webhooks.
+
 ## Deploy with PostgreSQL and Redis
 
 Docker is not installed in the provided workspace, so this container configuration has not been executed here.
@@ -156,7 +183,7 @@ The image builds Flutter and serves the result with FastAPI. Compose includes pg
 
 Alembic runs before the API starts. The scheduler reconciles pending payments, releases eligible expired reservations, clears expired conversation memory, and recovers queued enrichment work. In local mode, import jobs run after the response and payment reconciliation is available on demand; Redis is not required.
 
-The Sites hosting runtime available in this session supports Cloudflare Worker/static deployments, which cannot directly host this Python/PostgreSQL stack. No incomplete public frontend deployment was created. Use a container host for the supplied deployment or point a separately hosted Flutter build at your HTTPS API via `--dart-define=API_BASE_URL=...`.
+For a fully controlled long-running deployment, use the supplied container profile on a host that supports Docker and managed PostgreSQL/Redis. Vercel remains the quickest way to share the web console and serverless API; the container profile is the better fit for durable workers and scheduled reconciliation.
 
 ## Verification and remaining acceptance gates
 
@@ -176,3 +203,4 @@ Remaining deployment acceptance gates are real Nemotron responses/tool-call comp
 GitHub Actions runs backend tests, static analysis, Flutter tests, and the production web build for every proposed change.
 
 Companion visual direction: [Figma design board](https://www.figma.com/design/u14gKySEC5Vo690pFN8W8L).
+
