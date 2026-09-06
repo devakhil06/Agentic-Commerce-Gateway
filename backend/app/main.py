@@ -18,7 +18,7 @@ from fastapi import (
     WebSocketDisconnect,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
@@ -56,6 +56,21 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 rate_windows = defaultdict(deque)
+
+
+@app.get("/")
+def root():
+    """Provide a useful deployment landing response when no static web bundle is mounted."""
+    web_index = Path(__file__).resolve().parents[2] / "frontend" / "build" / "web" / "index.html"
+    if web_index.exists():
+        return FileResponse(web_index)
+    return {
+        "name": "Agentic Commerce Gateway",
+        "status": "ok",
+        "message": "The ACG API is running. Open /docs for the API explorer.",
+        "health": "/api/health",
+        "capabilities": "/api/v1/commerce/capabilities",
+    }
 
 
 @app.middleware("http")
